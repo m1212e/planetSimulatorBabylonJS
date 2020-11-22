@@ -20,7 +20,6 @@ function rotateAroundCenter(x: number, y: number, angle: number) {
 }
 
 function rotateAroundPoint(centralX: number, centralY: number, x: number, y: number, angle: number) {
-    console.log(angle);
     const rad = (Math.PI / 180) * angle;
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
