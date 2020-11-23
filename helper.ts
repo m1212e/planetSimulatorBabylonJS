@@ -1,4 +1,3 @@
-import { SineEase } from "babylonjs";
 
 /**
  * Rotates a 2d coordinate around the center of the coordinate system
@@ -10,15 +9,20 @@ import { SineEase } from "babylonjs";
  * @returns The new coordinates as object {x: number, y: number}
  */
 function rotateAroundCenter(x: number, y: number, angle: number) {
-    const rad = (Math.PI / 180) * angle;
-    const cos = Math.cos(rad);
-    const sin = Math.sin(rad);
-    const newX = (cos * (x)) - (sin * (y));
-    const newY = (cos * (y)) + (sin * (x));
-
-    return {x: newX, y: newY};
+    return rotateAroundPoint(0, 0, x, y, angle);
 }
 
+/**
+ * Rotates a 2d coordinate around the center given in the parameters
+ * 
+ * @param centralX x coordinate of the center to rotate around
+ * @param centralY y coordinate of the center to rotate around
+ * @param x x coordinate
+ * @param y y coordinate
+ * @param angle angle to rotate
+ * 
+ * @returns The new coordinates as object {x: number, y: number}
+ */
 function rotateAroundPoint(centralX: number, centralY: number, x: number, y: number, angle: number) {
     const rad = (Math.PI / 180) * angle;
     const cos = Math.cos(rad);
@@ -29,11 +33,11 @@ function rotateAroundPoint(centralX: number, centralY: number, x: number, y: num
 }
 
 /**
- * Calculates current angle of a planet by the given parameters
+ * Calculates current angle of an objec by the given parameters
  * 
  * @param passedTimeInMillis time passed since start of calculation in milliseconds
  * @param sim_day duration of a day in minutes
- * @param yearDuration amount of (earth) days the planet takes to surround the sun
+ * @param yearDuration amount of (earth) days the object takes to surround the center
  * 
  * @returns The angle as number the Objects needs to move for the next frame 
  */
