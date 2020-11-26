@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import {Texture} from "babylonjs";
-import {getAngle, rotateAroundCenter, rotateAroundPoint} from './helper';
+import {getAngle, rotateAroundCenter, rotateAroundPoint, getRotation} from './helper';
 import planet_textures from './assets/*.jpg';
 import skybox_textures from './assets/skybox/*.jpg';
 
@@ -102,15 +102,13 @@ if (!BABYLON.Engine.isSupported()) {
     skyboxMaterial.backFaceCulling = false;
     skyboxMaterial.reflectionTexture = BABYLON.CubeTexture.CreateFromImages(textures, scene);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
     skybox.material = skyboxMaterial;
 
     var d = new Date();
     var startTime = d.getTime();
     var lastTime = startTime;
 
-    var sim_year = 5;                               // one simulated earth year in minutes
+    var sim_year = 15;                               // one simulated earth year in minutes
     var sim_day = sim_year / 365.24;               // one simulated earth day in minutes
     var sim_month = sim_year / (365.24 / 27.3);      // one simulated moon loop in minutes
     var sim_mars_sol = sim_year * (687.0 / 354.24);	    // one simulated mars year in minutes
@@ -162,31 +160,42 @@ if (!BABYLON.Engine.isSupported()) {
         earth.position.x = earthCoords.x;
         earth.position.z = earthCoords.y;
 
+        earth.rotation.y = -getRotation(passedTimeInMillis, sim_day, 1);
+
         // Moon position and rotation
-        const moonCoords = rotateAroundPoint(earth.position.x, earth.position.z, earth.position.x - 0.5, earth.position.z, getAngle(passedTimeInMillis, sim_day, 27));
+        const moonCoords = rotateAroundPoint(earth.position.x, earth.position.z, earth.position.x - 0.5, earth.position.z, getAngle(passedTimeInMillis, sim_day, 27.3));
         moon.position.x = moonCoords.x;
         moon.position.z = moonCoords.y;
 
+        moon.rotation.y = -getRotation(passedTimeInMillis, sim_day, 27.3);
+        
         // Moon Satellite position and rotation
-        const satelliteCoords = rotateAroundPoint(moon.position.x, moon.position.z, moon.position.x - 0.2, moon.position.z, getAngle(passedTimeInMillis, sim_day, 27 / 3));
+        const satelliteCoords = rotateAroundPoint(moon.position.x, moon.position.z, moon.position.x - 0.2, moon.position.z, getAngle(passedTimeInMillis, sim_day, 27.3 / 3));
         satellite.position.x = satelliteCoords.x;
         satellite.position.z = satelliteCoords.y;
+
+        satellite.rotation.y = -getRotation(passedTimeInMillis, sim_day, 27.3  / 3);
         
         // Mars position and rotation
         const marsCoords = rotateAroundCenter(2, 0, getAngle(passedTimeInMillis, sim_day, 687));
         mars.position.x = marsCoords.x;
         mars.position.z = marsCoords.y;
+
+        mars.rotation.y = -getRotation(passedTimeInMillis, sim_day, 1.0271);
         
         // Phobos position and rotation
         const phobosCoords = rotateAroundPoint(mars.position.x, mars.position.z, mars.position.x - 0.2, mars.position.z, getAngle(passedTimeInMillis, sim_day, 0.308));
         phobos.position.x = phobosCoords.x;
         phobos.position.z = phobosCoords.y;
 
-        // Phobos position and rotation
+        mars.rotation.y = -getRotation(passedTimeInMillis, sim_day, 0.308);
+        
+        // Deimos position and rotation
         const deimosCoords = rotateAroundPoint(mars.position.x, mars.position.z, mars.position.x - 0.43, mars.position.z, getAngle(passedTimeInMillis, sim_day, 1.2575));
         deimos.position.x = deimosCoords.x;
         deimos.position.z = deimosCoords.y;
-
+        
+        mars.rotation.y = -getRotation(passedTimeInMillis, sim_day, 1.2575);
 
 
         //			console.log(BABYLON.Tools.GetFps().toFixed() + " fps");

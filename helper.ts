@@ -46,4 +46,17 @@ function getAngle(passedTimeInMillis: number, sim_day: number, yearDuration: num
     return (360 * (daysPassed / yearDuration)) % 360;
 }
 
-export {rotateAroundCenter, getAngle, rotateAroundPoint};
+/**
+ * Calculates the rotation around its own axis by the given parameters
+ * 
+ * @param passedTimeInMillis time passed since start of calculation in milliseconds
+ * @param sim_day duration of a day in minutes
+ * @param rotationDuration amount of (earth) days the object takes rotate once around itself
+ * 
+ * @returns The angle as radians number the object needs on the y roation property
+ */
+function getRotation(passedTimeInMillis: number, sim_day: number, rotationDuration: number) {
+    return getAngle(passedTimeInMillis, sim_day, rotationDuration) * Math.PI / 180;//Umrechnung von grad in radians
+}
+
+export {rotateAroundCenter, getAngle, rotateAroundPoint, getRotation};
